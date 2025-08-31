@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useNoteStore } from '@/lib/store/noteStore';
-import { createNote } from '@/lib/api';
+import { createNote } from '@/lib/notesApi'; 
 import { Note, NoteTag } from '@/types/note';
 import css from './NoteForm.module.css';
 
@@ -25,10 +25,7 @@ export default function NoteForm() {
   }, [draft]);
 
   const validTags: NoteTag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
-  const isValid =
-    title.length >= 3 &&
-    title.length <= 50 &&
-    validTags.includes(tag);
+  const isValid = title.length >= 3 && title.length <= 50 && validTags.includes(tag);
 
   const { mutateAsync, isPending, isError, error } = useMutation({
     mutationFn: async (noteData: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -107,17 +104,15 @@ export default function NoteForm() {
           required
         >
           {validTags.map((t) => (
-            <option key={t} value={t}>{t}</option>
+            <option key={t} value={t}>
+              {t}
+            </option>
           ))}
         </select>
       </div>
 
       <div className={css.actions}>
-        <button
-          type="button"
-          className={css.cancelButton}
-          onClick={() => router.back()}
-        >
+        <button type="button" className={css.cancelButton} onClick={() => router.back()}>
           Cancel
         </button>
         <button type="submit" className={css.submitButton} disabled={!isValid || isPending}>
