@@ -11,8 +11,10 @@ export const serverApi = async <TResponse, TBody = undefined>(
   method: HttpMethod,
   body?: TBody
 ): Promise<TResponse> => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore.toString();
+  
+  const cookieStore = await cookies(); 
+  const allCookies = cookieStore.getAll?.() ?? [];
+  const cookieHeader = allCookies.map(c => `${c.name}=${c.value}`).join('; ');
 
   const config: AxiosRequestConfig<TBody> = {
     url: baseURL + url,

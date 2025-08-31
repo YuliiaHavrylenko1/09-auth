@@ -38,12 +38,20 @@ export default async function NotesPage({ params }: NotesPageProps) {
   const slugArray = resolvedParams.slug ?? [];
   const tag = slugArray.length > 0 ? slugArray[0] : 'All';
 
-  const notes = await fetchNotes();
+  const allowedTags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+  const filterTag = tag === 'All' ? undefined : allowedTags.includes(tag) ? tag : undefined;
+
+  // Викликаємо fetchNotes з обов'язковими параметрами
+  const { notes, totalPages } = await fetchNotes({
+    page: 1,
+    perPage: 12,
+    tag: filterTag,
+  });
 
   return (
     <NotesClient
       notes={notes}
-      totalPages={1}  
+      totalPages={totalPages}
       activeTag={tag}
     />
   );

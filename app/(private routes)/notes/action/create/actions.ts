@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { createNote } from '@/lib/api';
+import { serverApi } from '@/lib/api/serverApi'; 
 import { revalidatePath } from 'next/cache';
 
 type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
@@ -24,8 +24,9 @@ export async function handleCreateNote(formData: FormData) {
     throw new Error('Invalid form data');
   }
 
-  await createNote({ title, content, tag });
+  // Використовуємо serverApi для створення нотатки
+  await serverApi('/notes', 'POST', { title, content, tag });
 
-  revalidatePath('/notes'); 
-  redirect('/notes'); 
+  revalidatePath('/notes');
+  redirect('/notes');
 }
