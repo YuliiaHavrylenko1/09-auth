@@ -1,4 +1,4 @@
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '@/lib/notesApi';
 import NotesClient from './Notes.client';
 import { Metadata } from 'next';
 
@@ -38,20 +38,12 @@ export default async function NotesPage({ params }: NotesPageProps) {
   const slugArray = resolvedParams.slug ?? [];
   const tag = slugArray.length > 0 ? slugArray[0] : 'All';
 
-  const allowedTags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
-
-  const filterTag = tag === 'All' ? undefined : allowedTags.includes(tag) ? tag : undefined;
-
-  const { notes, totalPages } = await fetchNotes({
-    page: 1,
-    perPage: 12,
-    tag: filterTag,
-  });
+  const notes = await fetchNotes();
 
   return (
     <NotesClient
       notes={notes}
-      totalPages={totalPages}
+      totalPages={1}  
       activeTag={tag}
     />
   );
